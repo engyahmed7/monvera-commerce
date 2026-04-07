@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:ecommerce_project/models/cart_item_model.dart';
 import 'package:ecommerce_project/models/product_model.dart';
 
 class CartProvider extends ChangeNotifier {
@@ -12,6 +13,18 @@ class CartProvider extends ChangeNotifier {
 
   int get totalItems => _quantitiesByProductId.values.fold(0, (a, b) => a + b);
 
+  List<CartItemModel> get items {
+    final result = <CartItemModel>[];
+    _quantitiesByProductId.forEach((productId, quantity) {
+      final product = _productsById[productId];
+      if (product != null) {
+        result.add(CartItemModel(product: product, quantity: quantity));
+      }
+    });
+    // print(result);
+    return result;
+  }
+
   double get totalPrice {
     double total = 0;
     _quantitiesByProductId.forEach((id, qty) {
@@ -23,6 +36,8 @@ class CartProvider extends ChangeNotifier {
     return total;
   }
 
+  int getQuantity(int productId) => _quantitiesByProductId[productId] ?? 0;
+
   void add(ProductModel product) {
     _productsById[product.id] = product;
     _quantitiesByProductId.update(
@@ -30,6 +45,7 @@ class CartProvider extends ChangeNotifier {
       (qty) => qty + 1,
       ifAbsent: () => 1,
     );
+    print(_quantitiesByProductId);
     notifyListeners();
   }
 

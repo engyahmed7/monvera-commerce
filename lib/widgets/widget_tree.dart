@@ -5,10 +5,12 @@ import '../core/constants/app_constants.dart';
 import '../providers/auth_provider.dart';
 import '../views/pages/auth/login_page.dart';
 import '../views/pages/cart/cart_page.dart';
-import '../views/pages/home/home_page.dart';
+import '../views/pages/cart/widgets/cart_card.dart';
+import '../views/pages/cart/widgets/build_scrollable_sheet.dart';
+import '../views/pages/home/home_page.dart';  
 import '../views/pages/profile/profile_page.dart';
+import '../providers/cart_provider.dart';
 
-/// Main app shell: shared [AppBar] and [BottomNavigationBar] for all primary tabs.
 class WidgetTree extends StatefulWidget {
   const WidgetTree({super.key});
 
@@ -52,13 +54,18 @@ class _WidgetTreeState extends State<WidgetTree> {
               tooltip: 'Logout',
             ),
           IconButton(
+            icon: Badge.count(
+              count: context.watch<CartProvider>().totalItems,
+              child: const Icon(Icons.shopping_cart),
+            ),
             onPressed: () {
-              // Navigator.of(
-              //   context,
-              // ).push<bool>(MaterialPageRoute(builder: (_) => const CartPage()));
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return BuildScrollableSheet();
+                },
+              );
             },
-            icon: const Icon(Icons.shopping_cart),
-            tooltip: 'Cart',
           ),
         ],
       ),
