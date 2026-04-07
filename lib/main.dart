@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'core/constants/app_constants.dart';
 import 'providers/auth_provider.dart';
 import 'providers/cart_provider.dart';
+import 'providers/products_provider.dart';
 import 'views/pages/auth/login_page.dart';
 import 'views/pages/splash/splash_page.dart';
 import 'widgets/widget_tree.dart';
@@ -14,6 +15,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => ProductsProvider()),
       ],
       child: MyApp(),
     ),
