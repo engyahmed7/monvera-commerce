@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ecommerce_project/providers/products_provider.dart';
-import 'package:ecommerce_project/providers/cart_provider.dart';
-import 'package:ecommerce_project/views/pages/products/widgets/product_card.dart';
+import 'package:ecommerce_project/views/pages/home/widgets/home_filters_bar.dart';
+import 'package:ecommerce_project/views/pages/home/widgets/home_products_body.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context, productsProvider, _) {
         return Column(
           children: [
-            _FiltersBar(
+            HomeFiltersBar(
               titleController: _titleController,
               categoryController: _categoryController,
               minPriceController: _minPriceController,
@@ -90,145 +90,15 @@ class _HomePageState extends State<HomePage> {
               onApply: () => _applyFilters(context),
               onClear: () => _clearFilters(context),
             ),
-            Expanded(child: _buildBody(context, productsProvider)),
+            Expanded(
+              child: HomeProductsBody(
+                productsProvider: productsProvider,
+                scrollController: _scrollController,
+              ),
+            ),
           ],
         );
       },
-    );
-  }
-
-  Widget _buildBody(BuildContext context, ProductsProvider productsProvider) {
-    if (productsProvider.isInitialLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    if (productsProvider.errorMessage != null &&
-        productsProvider.products.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(
-            productsProvider.errorMessage!,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
-    }
-    if (productsProvider.products.isEmpty) {
-      return const Center(child: Text('No products found.'));
-    }
-
-    return RefreshIndicator(
-      onRefresh: productsProvider.loadInitial,
-      child: ListView.builder(
-        controller: _scrollController,
-        itemCount:
-            productsProvider.products.length +
-            (productsProvider.isLoadingMore ? 1 : 0),
-        itemBuilder: (context, index) {
-          if (index >= productsProvider.products.length) {
-            return const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: Center(child: CircularProgressIndicator()),
-            );
-          }
-          final product = productsProvider.products[index];
-          return ProductCard(
-            product: product,
-            onAddToCart: () {
-              context.read<CartProvider>().add(product);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${product.title} added to cart')),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _FiltersBar extends StatelessWidget {
-  const _FiltersBar({
-    required this.titleController,
-    required this.categoryController,
-    required this.minPriceController,
-    required this.maxPriceController,
-    required this.onApply,
-    required this.onClear,
-  });
-
-  final TextEditingController titleController;
-  final TextEditingController categoryController;
-  final TextEditingController minPriceController;
-  final TextEditingController maxPriceController;
-  final VoidCallback onApply;
-  final VoidCallback onClear;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-      child: Column(
-        children: [
-          TextField(
-            controller: titleController,
-            decoration: const InputDecoration(
-              labelText: 'Filter by title',
-              prefixIcon: Icon(Icons.search),
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: categoryController,
-            decoration: const InputDecoration(
-              labelText: 'Filter by category slug (e.g. clothes)',
-              prefixIcon: Icon(Icons.category),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: minPriceController,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  decoration: const InputDecoration(labelText: 'Min price'),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextField(
-                  controller: maxPriceController,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  decoration: const InputDecoration(labelText: 'Max price'),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: FilledButton(
-                  onPressed: onApply,
-                  child: const Text('Apply filters'),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: onClear,
-                  child: const Text('Clear filters'),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

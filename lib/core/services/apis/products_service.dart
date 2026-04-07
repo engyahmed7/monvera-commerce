@@ -52,6 +52,7 @@ class ProductsService {
       },
     );
     if (response.statusCode == 200) {
+      print(response.body);
       return (json.decode(response.body) as List)
           .map((product) => ProductModel.fromJson(product as Map<String, dynamic>))
           .toList();
