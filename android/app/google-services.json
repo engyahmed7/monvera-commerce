@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "791682330072",
+    "firebase_url": "https://rntls-c9096-default-rtdb.firebaseio.com",
+    "project_id": "rntls-c9096",
+    "storage_bucket": "rntls-c9096.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791682330072:android:d22376081308c56ea896ad",
+        "android_client_info": {
+          "package_name": "com.example.ecommerce_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9tzdb2J1H1GMuVySn-vsx3jQAilLiAEM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

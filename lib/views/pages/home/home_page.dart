@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ecommerce_project/providers/products_provider.dart';
+import 'package:ecommerce_project/views/pages/products/provider/products_provider.dart';
 import 'package:ecommerce_project/views/pages/home/widgets/home_filters_bar.dart';
 import 'package:ecommerce_project/views/pages/home/widgets/home_products_body.dart';
 

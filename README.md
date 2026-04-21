@@ -1,18 +1,42 @@
 # ecommerce_project
 
-A new Flutter project.
+Flutter e-commerce app with Firebase and environment-based configuration.
 
-## Getting Started
+## Firebase Environment Setup
 
-This project is a starting point for a Flutter application.
+This project uses `--dart-define-from-file` so Firebase values are not hardcoded in `lib/firebase_options.dart`.
 
-A few resources to get you started if this is your first Flutter project:
+### 1) Create local env files
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+Use the provided templates:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# flutter_ecommerce_app
+- `env/dev.example.json`
+- `env/prod.example.json`
+
+Copy and rename them to local files (these are ignored by git):
+
+```bash
+cp env/dev.example.json env/dev.json
+cp env/prod.example.json env/prod.json
+```
+
+Fill each file with your Firebase project values.
+
+### 2) Run with a selected environment
+
+Development:
+
+```bash
+flutter run --dart-define-from-file=env/dev.json
+```
+
+Production-like local run:
+
+```bash
+flutter run --release --dart-define-from-file=env/prod.json
+```
+
+## Notes
+
+- Firebase config values are client configuration values; they are still distributed with the app build.
+- Keeping them out of source code helps team workflows and avoids accidental commits of environment-specific config.

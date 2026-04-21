@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/errors/auth_exception.dart';
-import '../../../providers/auth_provider.dart';
+import 'provider/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
       final nav = Navigator.of(context);
       if (nav.canPop()) {
-        nav.pop(true);
+        nav.pop(true); 
       } else {
         nav.pushReplacementNamed('/home');
       }

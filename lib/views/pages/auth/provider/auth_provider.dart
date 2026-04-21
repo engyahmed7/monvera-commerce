@@ -1,11 +1,14 @@
 import 'package:flutter/foundation.dart';
 
-import '../core/errors/auth_exception.dart';
-import '../core/services/apis/auth_service.dart';
+import '../../../../core/network/dio_client.dart';
+import '../../../../core/errors/auth_exception.dart';
+import '../service/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   AuthProvider({AuthService? authService})
-    : _authService = authService ?? AuthService();
+    : _authService = authService ?? AuthService() {
+    DioClient.instance.setUnauthorizedHandler(_handleUnauthorized);
+  }
 
   final AuthService _authService;
 
@@ -18,7 +21,6 @@ class AuthProvider extends ChangeNotifier {
 
   bool get isBusy => _isBusy;
 
-  /// Load token from secure storage so the session survives restarts.
   Future<void> initialize() async {
     _token = await _authService.readStoredToken();
     notifyListeners();
@@ -44,5 +46,10 @@ class AuthProvider extends ChangeNotifier {
     await _authService.logout();
     _token = null;
     notifyListeners();
+  }
+
+  Future<void> _handleUnauthorized() async {
+    if (!isLoggedIn) return;
+    await logout();
   }
 }

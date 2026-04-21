@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ecommerce_project/models/product_model.dart';
-import 'package:ecommerce_project/core/services/apis/products_service.dart';
+import 'package:ecommerce_project/views/pages/products/service/products_service.dart';
 
 class ProductsProvider extends ChangeNotifier {
   ProductsProvider({ProductsService? productsService})

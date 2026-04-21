@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:ecommerce_project/models/cart_item_model.dart';
+import 'package:ecommerce_project/views/pages/cart/model/cart_item_model.dart';
 import 'package:ecommerce_project/models/product_model.dart';
 
 class CartProvider extends ChangeNotifier {

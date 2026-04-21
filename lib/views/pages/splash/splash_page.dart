@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_constants.dart';
-import '../../../providers/auth_provider.dart';
+import '../auth/provider/auth_provider.dart';
 
-/// Shown on cold start; then replaces itself with login or main shell.
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 

@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import 'package:ecommerce_project/core/constants/app_constants.dart';
 import 'package:ecommerce_project/main.dart';
-import 'package:ecommerce_project/providers/auth_provider.dart';
-import 'package:ecommerce_project/providers/cart_provider.dart';
+import 'package:ecommerce_project/views/pages/auth/provider/auth_provider.dart';
+import 'package:ecommerce_project/views/pages/cart/provider/cart_provider.dart';
 
 void main() {
   testWidgets('Shows splash with app branding', (WidgetTester tester) async {

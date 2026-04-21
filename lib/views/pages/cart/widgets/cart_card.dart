@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ecommerce_project/models/cart_item_model.dart';
-import 'package:ecommerce_project/providers/cart_provider.dart';
+import 'package:ecommerce_project/views/pages/cart/model/cart_item_model.dart';
+import 'package:ecommerce_project/views/pages/cart/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
 
 class CartCard extends StatelessWidget {
@@ -29,7 +29,7 @@ class CartCard extends StatelessWidget {
                       width: 72,
                       height: 72,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
+                      errorBuilder: (_, _, _) => Container(
                         width: 72,
                         height: 72,
                         color: Colors.grey.shade800,
