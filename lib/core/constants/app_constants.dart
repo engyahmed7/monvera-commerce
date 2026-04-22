@@ -1,6 +1,5 @@
-/// Shared app branding and routes.
 abstract final class AppConstants {
-  static const String appName = 'NOSHA';
+  static const String appName = 'MONVERA';
   static const String logoAssetPath = 'assets/images/logo2.png';
 
   static const String loginUrl = 'https://api.escuelajs.co/api/v1/auth/login';
