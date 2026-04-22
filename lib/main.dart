@@ -111,6 +111,55 @@ Future<bool> _bootstrapFirebase() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case '/login':
+        return _buildAnimatedRoute(
+          settings: settings,
+          page: const LoginPage(),
+        );
+      case '/home':
+        return _buildAnimatedRoute(
+          settings: settings,
+          page: const WidgetTree(),
+        );
+      default:
+        return null;
+    }
+  }
+
+  PageRouteBuilder<dynamic> _buildAnimatedRoute({
+    required RouteSettings settings,
+    required Widget page,
+  }) {
+    return PageRouteBuilder<dynamic>(
+      settings: settings,
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOutCubic;
+        final slideTween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
+        final fadeTween = Tween<double>(begin: 0.0, end: 1.0).chain(
+          CurveTween(curve: curve),
+        );
+
+        return SlideTransition(
+          position: animation.drive(slideTween),
+          child: FadeTransition(
+            opacity: animation.drive(fadeTween),
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 280),
+      reverseTransitionDuration: const Duration(milliseconds: 220),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -124,10 +173,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const SplashPage(),
-      routes: {
-        '/login': (context) => const LoginPage(),
-        '/home': (context) => const WidgetTree(),
-      },
+      onGenerateRoute: _onGenerateRoute,
     );
   }
 }

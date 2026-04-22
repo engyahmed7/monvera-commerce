@@ -33,12 +33,15 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await auth.login(_emailController.text, _passwordController.text);
       if (!mounted) return;
-      final nav = Navigator.of(context);
-      if (nav.canPop()) {
-        nav.pop(true); 
-      } else {
-        nav.pushReplacementNamed('/home');
-      }
+      // final nav = Navigator.of(context);
+      // if (nav.canPop()) {
+      //   nav.pop(true); 
+      // } else {
+      //   nav.pushReplacementNamed('/home');
+      // }
+
+      Navigator.pushReplacementNamed(context, '/home');
+
     } on AuthException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(
