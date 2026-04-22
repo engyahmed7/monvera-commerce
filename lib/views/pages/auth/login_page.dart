@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/errors/auth_exception.dart';
+import '../camera/camera_capture_page.dart';
 import 'provider/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   bool _obscurePassword = true;
+  String? _capturedImagePath;
 
   @override
   void dispose() {
@@ -48,6 +52,20 @@ class _LoginPageState extends State<LoginPage> {
         context,
       ).showSnackBar(SnackBar(content: Text(e.message)));
     }
+  }
+
+  Future<void> _openCameraAndCapture() async {
+    final imagePath = await Navigator.of(context).push<String>(
+      MaterialPageRoute(
+        builder: (_) => const CameraCapturePage(),
+      ),
+    );
+
+    if (!mounted || imagePath == null) return;
+
+    setState(() {
+      _capturedImagePath = imagePath;
+    });
   }
 
   @override
@@ -118,6 +136,24 @@ class _LoginPageState extends State<LoginPage> {
                     )
                   : const Text('Login'),
             ),
+            const SizedBox(height: 20),
+            OutlinedButton.icon(
+              onPressed: auth.isBusy ? null : _openCameraAndCapture,
+              icon: const Icon(Icons.camera_alt_outlined),
+              label: const Text('Open Camera'),
+            ),
+            if (_capturedImagePath != null) ...[
+              const SizedBox(height: 16),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.file(
+                  File(_capturedImagePath!),
+                  height: 220,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ],
           ],
         ),
       ),
