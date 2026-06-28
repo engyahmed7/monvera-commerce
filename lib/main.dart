@@ -5,10 +5,13 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 import 'core/constants/app_constants.dart';
+import 'core/realtime/reverb_provider.dart';
+import 'core/services/fcm_token_service.dart';
 import 'views/pages/auth/provider/auth_provider.dart';
 import 'views/pages/about/provider/about_provider.dart';
 import 'views/pages/cart/provider/cart_provider.dart';
 import 'views/pages/products/provider/products_provider.dart';
+import 'views/pages/chat/provider/chat_provider.dart';
 import 'views/pages/auth/login_page.dart';
 import 'views/pages/splash/splash_page.dart';
 import 'widgets/widget_tree.dart';
@@ -29,31 +32,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   );
 }
 
-Future<void> _setupFcmToken() async {
-  final messaging = FirebaseMessaging.instance;
-
-  final settings = await messaging.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
-  debugPrint('FCM notification permission: ${settings.authorizationStatus}');
-
-  final token = await messaging.getToken();
-  if (token != null) {
-    debugPrint('FCM token: $token');
-  } else {
-    debugPrint('FCM token is null');
-  }
-
-  messaging.onTokenRefresh.listen((newToken) {
-    debugPrint('FCM token refreshed: $newToken');
-  });
-
+void _setupFcmListeners() {
   FirebaseMessaging.onMessage.listen((message) {
     debugPrint(
       'FCM foreground message: notification=${message.notification != null}, '
@@ -77,7 +56,13 @@ Future<void> main() async {
 
   if (firebaseReady) {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    await _setupFcmToken();
+    _setupFcmListeners();
+    FcmTokenService.setupAfterFirstFrame();
+  } else {
+    debugPrint(
+      '[FCM] Skipped device token — Firebase did not initialize. '
+      'Check firebase_options / google-services.json / GoogleService-Info.plist.',
+    );
   }
 
   runApp(
@@ -87,6 +72,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => AboutProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => ProductsProvider()),
+        ChangeNotifierProvider(create: (_) => ReverbProvider()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
       ],
       child: MyApp(),
     ),
@@ -103,6 +90,10 @@ Future<bool> _bootstrapFirebase() async {
     return true;
   } catch (e, stackTrace) {
     debugPrint('Firebase bootstrap failed: $e');
+    debugPrint(
+      'Run with: flutter run --dart-define-from-file=env/dev.json '
+      '(create env/dev.json from env/dev.example.json + google-services.json)',
+    );
     debugPrintStack(stackTrace: stackTrace);
     return false;
   }

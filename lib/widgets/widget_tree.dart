@@ -10,6 +10,7 @@ import '../views/pages/cart/widgets/build_scrollable_sheet.dart';
 import '../views/pages/home/home_page.dart';  
 import '../views/pages/profile/profile_page.dart';
 import '../views/pages/cart/provider/cart_provider.dart';
+import '../views/pages/chat/chat_page.dart';
 
 class WidgetTree extends StatefulWidget {
   const WidgetTree({super.key});
@@ -24,6 +25,7 @@ class _WidgetTreeState extends State<WidgetTree> {
   static const List<Widget> _tabPages = [
     HomePage(),
     CartPage(),
+    ChatPage(),
     ProfilePage(),
   ];
 
@@ -89,6 +91,7 @@ class _WidgetTreeState extends State<WidgetTree> {
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           NavigationDestination(icon: Icon(Icons.shopping_cart), label: 'Cart'),
+          NavigationDestination(icon: Icon(Icons.chat_bubble_outline), label: 'Chat'),
           NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),

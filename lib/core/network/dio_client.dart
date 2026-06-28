@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../constants/app_constants.dart';
 import '../services/storage_service.dart';
 
 typedef UnauthorizedHandler = Future<void> Function();
@@ -12,13 +13,19 @@ class DioClient {
           connectTimeout: const Duration(seconds: 15),
           receiveTimeout: const Duration(seconds: 15),
           sendTimeout: const Duration(seconds: 15),
-          headers: const {'Content-Type': 'application/json'},
+          headers: const {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+          },
         ),
       ) {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final token = await _storage.getToken();
+          final token = AppConstants.overrideBearerToken.trim().isNotEmpty
+              ? AppConstants.overrideBearerToken.trim()
+              : await _storage.getToken();
           if (token != null && token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
           }

@@ -1,16 +1,19 @@
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/network/dio_client.dart';
+import '../../../../core/realtime/reverb_socket_service.dart';
 import '../../../../core/errors/auth_exception.dart';
 import '../service/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
-  AuthProvider({AuthService? authService})
-    : _authService = authService ?? AuthService() {
+  AuthProvider({AuthService? authService, ReverbSocketService? reverbSocketService})
+    : _authService = authService ?? AuthService(),
+      _reverbSocketService = reverbSocketService ?? ReverbSocketService.instance {
     DioClient.instance.setUnauthorizedHandler(_handleUnauthorized);
   }
 
   final AuthService _authService;
+  final ReverbSocketService _reverbSocketService;
 
   String? _token;
   bool _isBusy = false;
@@ -23,6 +26,9 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> initialize() async {
     _token = await _authService.readStoredToken();
+    if (isLoggedIn) {
+      await _reverbSocketService.connect();
+    }
     notifyListeners();
   }
 
@@ -31,6 +37,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     try {
       _token = await _authService.login(email, password);
+      await _reverbSocketService.connect();
     } on AuthException {
       rethrow;
     } catch (e, st) {
@@ -43,6 +50,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> logout() async {
+    await _reverbSocketService.disconnect();
     await _authService.logout();
     _token = null;
     notifyListeners();
